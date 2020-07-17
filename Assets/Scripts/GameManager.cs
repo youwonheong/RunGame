@@ -33,16 +33,28 @@ public class GameManager : MonoBehaviour {
     }
 
     void Update() {
+        if(isGameover && Input.GetMouseButtonDown(0))
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
         // 게임 오버 상태에서 게임을 재시작할 수 있게 하는 처리
     }
 
     // 점수를 증가시키는 메서드
     public void AddScore(int newScore) {
-        
+        if (!isGameover)
+        {
+            score += newScore;
+            scoreText.text = "Score : " + score;
+
+        }
     }
 
     // 플레이어 캐릭터가 사망시 게임 오버를 실행하는 메서드
     public void OnPlayerDead() {
-        
+        //현재 상태를 게임 오버 상태로 변경
+        isGameover = true;
+        //게임 오버 UI를 활성화
+        gameoverUI.SetActive(true);
     }
 }
