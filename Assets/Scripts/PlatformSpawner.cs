@@ -22,9 +22,40 @@ public class PlatformSpawner : MonoBehaviour {
 
     void Start() {
         // 변수들을 초기화하고 사용할 발판들을 미리 생성
+        platforms = new GameObject[count];
+        for(int i = 0; i < count; i++)
+        {
+            platforms[i] = Instantiate(platformPrefab, poolPosition, Quaternion.identity);
+        }
+        lastSpawnTime = 0f;
+        timeBetSpawn = 0f;
     }
 
     void Update() {
         // 순서를 돌아가며 주기적으로 발판을 배치
+        if (GameManager.instance.isGameover) { return; }
+        if(Time.time >= lastSpawnTime + timeBetSpawn)
+        {
+            //기록된 마지막 배치 시점을 현재 시점으로 갱신
+            lastSpawnTime = Time.time;
+
+            timeBetSpawn = Random.Range(timeBetSpawnMin, timeBetSpawnMax);
+
+            float yPos = Random.Range(yMin, yMax);
+
+            platforms[currentIndex].SetActive(false);
+            platforms[currentIndex].SetActive(true);
+
+            platforms[currentIndex].transform.position = new Vector2(xPos, yPos);
+            //순번 넘기기
+            currentIndex++;
+
+            // 마지막 순번에 도달했다면 순번을 리셋
+            if (currentIndex >= count)
+            {
+                currentIndex = 0;
+            }
+
+        }
     }
 }
